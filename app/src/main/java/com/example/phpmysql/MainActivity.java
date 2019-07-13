@@ -1,5 +1,6 @@
 package com.example.phpmysql;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     EditText username, email, password;
+    private ProgressDialog progressDialog;
     Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +34,25 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.emailEditText);
         password  = findViewById(R.id.passwordEditText);
         button = findViewById(R.id.submitButton);
+        progressDialog = new ProgressDialog(this);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerUser();
             }
         });
-
     }
     void registerUser(){
-        final String Username = username.getText().toString();
-        final String Email = email.getText().toString();
-        final String Password = password.getText().toString();
+        final String Username = username.getText().toString().trim();
+        final String Email = email.getText().toString().trim();
+        final String Password = password.getText().toString().trim();
+        progressDialog.setMessage("Registering user");
+        progressDialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.URL_REGISTER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -60,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Error occured", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
         ){
@@ -73,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+       RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
 
     }
 

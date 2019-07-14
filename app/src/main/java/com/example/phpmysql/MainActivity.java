@@ -1,11 +1,14 @@
 package com.example.phpmysql;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,15 +28,24 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     EditText username, email, password;
     private ProgressDialog progressDialog;
+    TextView textViewAlreadyRegistered;
     Button button;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(SharedPrefManager.getInstance(this).isLoggedIn()){
+            finish();
+            startActivity(new Intent(this, Profile.class));
+            return;
+        }
         setContentView(R.layout.activity_main);
+        context = this;
         username = findViewById(R.id.usernameEditText);
         email = findViewById(R.id.emailEditText);
         password  = findViewById(R.id.passwordEditText);
         button = findViewById(R.id.submitButton);
+        textViewAlreadyRegistered = findViewById(R.id.alreadyRegistered);
         progressDialog = new ProgressDialog(this);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
                 registerUser();
             }
         });
+        textViewAlreadyRegistered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, LoginActivity.class));
+            }
+        });
+
     }
     void registerUser(){
         final String Username = username.getText().toString().trim();

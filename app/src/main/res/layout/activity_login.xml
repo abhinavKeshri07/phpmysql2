@@ -32,31 +32,13 @@
             android:hint="Password"
             android:inputType="textPassword"
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="email" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/emailEditText"
-            android:inputType="textWebEmailAddress"
-            android:hint="Email"
-            />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="submit"
-            android:id="@+id/submitButton"
+            android:text="Login"
+            android:id="@+id/loginButton"
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Already Registered?\nClick Here to login."
-            android:gravity="center_horizontal"
-            android:textSize="20dp"
-            android:id="@+id/alreadyRegistered"
-            />
+
 
 
 
